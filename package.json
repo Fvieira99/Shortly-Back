@@ -18,8 +18,10 @@
     "express": "^4.18.1",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
+    "nanoid": "^3.3.4",
     "pg": "^8.7.3",
-    "string-strip-html": "^9.1.12"
+    "string-strip-html": "^9.1.12",
+    "url-exist": "^3.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.16"
