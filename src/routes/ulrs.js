@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { addShortenLinks } from "../controllers/urls.js";
+import {
+  addShortenLinks,
+  getSingleLink,
+  openShortLink
+} from "../controllers/urls.js";
 import validateShortenLink from "../middlewares/shortenLink.js";
 import validateToken from "../middlewares/token.js";
 
@@ -11,5 +15,7 @@ urlsRouter.post(
   validateShortenLink,
   addShortenLinks
 );
+urlsRouter.get("/urls/:id", getSingleLink);
+urlsRouter.get("/urls/open/:shortUrl", openShortLink);
 
 export default urlsRouter;
