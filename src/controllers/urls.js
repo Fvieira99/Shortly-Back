@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import { nanoid } from "nanoid";
 import { stripHtml } from "string-strip-html";
-import express from "express";
 
 import db from "../../config/db.js";
 
@@ -81,6 +80,39 @@ export async function openShortLink(req, res) {
     );
 
     res.redirect(link.rows[0].originalLink);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}
+
+export async function deleteShortLink(req, res) {
+  const shortLinkId = req.params.id;
+
+  try {
+    const link = await db.query(
+      `
+      SELECT * FROM links
+      WHERE id = $1
+    `,
+      [shortLinkId]
+    );
+    console.log(link.rows);
+
+    if (!link.rows[0]) return res.sendStatus(404);
+    else if (link.rows[0].userId !== req.user.id)
+      return res.status(401).send("Usuário diferente do dono do shortLink");
+
+    await db.query(
+      `
+      DELETE FROM links 
+      WHERE id = $1 AND "userId" = $2
+    
+    `,
+      [shortLinkId, req.user.id]
+    );
+
+    res.sendStatus(204);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
