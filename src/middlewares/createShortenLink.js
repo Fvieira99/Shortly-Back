@@ -19,7 +19,7 @@ export default async function validateShortenLink(req, res, next) {
   try {
     const exists = await urlExist(url);
 
-    if (!exists) return res.status(400).send("Site não encontrado");
+    if (!exists) return res.status(404).send("Site não encontrado");
 
     const alreadyExistslink = await db.query(
       `

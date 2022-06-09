@@ -3,9 +3,9 @@ import db from "../../config/db.js";
 export async function getUserData(req, res) {
   const { id } = req.params;
   const tokenId = req.user.id;
+  let body;
 
-  if (tokenId !== parseInt(id))
-    return res.status(401).send("O error foi depois do middleware");
+  if (tokenId !== parseInt(id)) return res.sendStatus(401);
 
   try {
     const userData = await db.query(
@@ -21,8 +21,6 @@ export async function getUserData(req, res) {
       [id]
     );
 
-    if (!userData.rows[0]) return res.sendStatus(404);
-
     const userLinks = await db.query(
       `
       SELECT id, "shortLink" AS "shortUrl", "originalLink" AS url, views AS "visitCount" 
@@ -32,7 +30,13 @@ export async function getUserData(req, res) {
     `,
       [id]
     );
-    const body = { ...userData.rows[0], shortenedUrls: userLinks.rows };
+
+    if (!userData.rows[0]) {
+      body = { ...res.locals.user, shortenedUrls: userLinks.rows };
+      console.log(body);
+    } else {
+      body = { ...userData.rows[0], shortenedUrls: userLinks.rows };
+    }
 
     res.status(200).send(body);
   } catch (error) {
