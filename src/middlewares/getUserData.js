@@ -4,8 +4,7 @@ export default async function validateUser(req, res, next) {
   const { id } = req.params;
   const tokenId = req.user.id;
 
-  if (tokenId !== parseInt(id))
-    return res.status(401).send("O error foi depois do middleware");
+  if (tokenId !== parseInt(id)) return res.sendStatus(401);
 
   try {
     const user = await db.query(
@@ -24,5 +23,8 @@ export default async function validateUser(req, res, next) {
       visitCount: 0
     };
     next();
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
 }

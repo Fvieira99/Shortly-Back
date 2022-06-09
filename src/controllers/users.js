@@ -2,10 +2,8 @@ import db from "../../config/db.js";
 
 export async function getUserData(req, res) {
   const { id } = req.params;
-  const tokenId = req.user.id;
-  let body;
 
-  if (tokenId !== parseInt(id)) return res.sendStatus(401);
+  let body;
 
   try {
     const userData = await db.query(
