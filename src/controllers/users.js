@@ -2,7 +2,6 @@ import db from "../../config/db.js";
 
 export async function getUserData(req, res) {
   const { id } = req.params;
-
   let body;
 
   try {
@@ -48,9 +47,9 @@ export async function getRanking(req, res) {
     const ranking = await db.query(`
     SELECT users.id AS id, users.name AS name,
     COUNT(links.id) AS "linksCount",
-    SUM(links.views) AS "visitCount"
+    COALESCE(SUM(links.views),0) AS "visitCount"
     FROM users
-    JOIN links ON users.id = links."userId"
+    LEFT JOIN links ON users.id = links."userId"
     GROUP BY users.id
     ORDER BY "visitCount" DESC
     LIMIT 10
