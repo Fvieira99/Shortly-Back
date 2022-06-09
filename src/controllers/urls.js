@@ -9,7 +9,7 @@ dotenv.config();
 export async function addShortenLinks(req, res) {
   const { url } = req.body;
   const { id } = req.user;
-  const shortLink = nanoid(6);
+  const shortLink = nanoid(8);
   const originalLink = stripHtml(url).result.trim();
 
   try {
