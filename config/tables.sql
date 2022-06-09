@@ -9,7 +9,7 @@ CREATE TABLE "users"(
 CREATE TABLE "links"(
     id SERIAL PRIMARY KEY,
     "userId" INTEGER NOT NULL REFERENCES "users"("id"),
-    "originalLink" TEXT UNIQUE NOT NULL,
+    "originalLink" TEXT NOT NULL,
     "shortLink" TEXT UNIQUE NOT NULL,
     views INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
