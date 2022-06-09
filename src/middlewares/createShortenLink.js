@@ -4,6 +4,7 @@ import urlExist from "url-exist";
 
 export default async function validateShortenLink(req, res, next) {
   const { url } = req.body;
+  const { id } = req.user;
 
   const schemaValidation = shortenLinkValidation.validate(req.body, {
     abortEarly: false
@@ -20,20 +21,20 @@ export default async function validateShortenLink(req, res, next) {
 
     if (!exists) return res.status(400).send("Site não encontrado");
 
-    const link = await db.query(
+    const alreadyExistslink = await db.query(
       `
       SELECT * FROM links
-      WHERE "originalLink" = $1
+      WHERE "originalLink" = $1 AND "userId" = $2
     
     `,
-      [url]
+      [url, id]
     );
 
-    if (link.rows[0]) {
+    if (alreadyExistslink.rows[0]) {
       return res
         .status(409)
         .send(
-          `Já existe um link encurtado para essa URL, acesse por: ${link.rows[0].shortLink}`
+          `Já existe um link encurtado para essa URL, acesse por: ${alreadyExistslink.rows[0].shortLink}`
         );
     }
 
